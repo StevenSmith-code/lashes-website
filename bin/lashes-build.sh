@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
- # exit on error
- set -o errexit
+# exit on error
+set -o errexit
 
-# front end build commands 
-rm -rf public
-npm install --prefix client && npm run build --prefix client
-cp -a client/build/. public/
-# backend build commands
 bundle install
-bundle exec rake db:migrate db:seed
+# bundle exec rake assets:precompile # These lines are commented out because we have an API only app
+# bundle exec rake assets:clean
+bundle exec rake db:migrate
+bundle exec rake db:seed
