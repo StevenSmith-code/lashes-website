@@ -3,12 +3,12 @@ class UsersController < ApplicationController
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
     def index
         users = User.all
-        render json: users
+        render json: users, each_serializer: UserSerializer
     end
     
     def show
         user = User.find(params[:id])
-        render json: user
+        render json: user, serializer: UserSerializer
     end
     
     def create

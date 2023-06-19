@@ -8,10 +8,11 @@ import { Typography } from "@mui/material";
 
 function Login() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
     // Do something with the username and password values
     console.log("Username:", username);
     console.log("Password:", password);
@@ -24,16 +25,28 @@ function Login() {
     <div className="my-auto bg-gray-300 max-w-6xl m-auto px-40 py-32 rounded-lg ">
       <div className="text-center px-6  space-y-7">
         <form className="space-y-7" onSubmit={handleSubmit}>
-          <FormControl>
-            <FormLabel>Username</FormLabel>
-            <Input
-              name="username"
-              type="text"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </FormControl>
+          <div className="flex space-x-5">
+            <FormControl>
+              <FormLabel>Username</FormLabel>
+              <Input
+                name="username"
+                type="text"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Email</FormLabel>
+              <Input
+                name="email"
+                type="text"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </FormControl>
+          </div>
           <FormControl>
             <FormLabel>Password</FormLabel>
             <Input
