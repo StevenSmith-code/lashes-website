@@ -1,22 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import Link from "@mui/joy/Link";
 import { Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState([]);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log(errors);
+  }, []);
+
+  const formData = {
+    username,
+    email,
+    password,
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Do something with the username and password values
-    console.log("Username:", username);
-    console.log("Password:", password);
-    // Reset the form
+    fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    }).then((res) => {
+      if (res.ok) {
+        res.json().then((user) => {
+          onLogin(user);
+          navigate("/");
+        });
+      } else {
+        res.json().then((err) => setErrors(err.errors));
+      }
+    });
     setUsername("");
     setPassword("");
   };
@@ -25,17 +49,7 @@ function Login() {
     <div className="my-auto bg-gray-300 max-w-6xl m-auto px-40 py-32 rounded-lg ">
       <div className="text-center px-6  space-y-7">
         <form className="space-y-7" onSubmit={handleSubmit}>
-          <div className="flex space-x-5">
-            <FormControl>
-              <FormLabel>Username</FormLabel>
-              <Input
-                name="username"
-                type="text"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </FormControl>
+          <div className="">
             <FormControl>
               <FormLabel>Email</FormLabel>
               <Input
@@ -57,6 +71,9 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormControl>
+          {errors?.map((err) => (
+            <p key={err}>{err}</p>
+          ))}
           <Button sx={{ mt: 1 /* margin top */ }} type="submit">
             Log in
           </Button>

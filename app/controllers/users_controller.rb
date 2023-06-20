@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  skip_before_action :authorize, only: :create
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
     def index
@@ -7,8 +8,12 @@ class UsersController < ApplicationController
     end
     
     def show
-        user = User.find(params[:id])
-        render json: user, serializer: UserSerializer
+        user = User.find_by(id: session[:user_id])
+        if user
+            render json: user, serializer: UserSerializer
+        else
+            render json: {error: "Not authorized"}, status: :unauthorized
+        end
     end
     
     def create

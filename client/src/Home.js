@@ -3,10 +3,10 @@ import Header from "./Header";
 import ServiceOffers from "./ServiceOffers";
 import PricingTable from "./PricingTable";
 
-function Home() {
+function Home({ user, onLogout }) {
   return (
     <div>
-      <Header />
+      <Header user={user} onlogout={onLogout} />
       <ServiceOffers />
       <PricingTable />
     </div>

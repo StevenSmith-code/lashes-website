@@ -14,15 +14,21 @@ import {
 import { Logout } from "@mui/icons-material";
 import { Settings } from "lucide-react";
 
-function Header() {
+function Header({ user, onLogout }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const user = null;
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleLogout = () => {
+    fetch("/logout", {
+      method: "DELETE",
+    })
+      .then((res) => console.log(res))
+      .then(() => onLogout);
   };
   function stringToColor(string) {
     let hash = 0;
@@ -88,7 +94,7 @@ function Header() {
                 >
                   <Avatar
                     style={{ height: 56, width: 56 }}
-                    {...stringAvatar("Steven Smith")}
+                    {...stringAvatar(`${user.username}`)}
                   />
                 </IconButton>
               </Tooltip>
@@ -143,7 +149,7 @@ function Header() {
                 </ListItemIcon>
                 Settings
               </MenuItem>
-              <MenuItem onClick={handleClose} component={Link} to={"/logout"}>
+              <MenuItem onClick={handleLogout} component={Link} to={"/login"}>
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>
