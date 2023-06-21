@@ -18,6 +18,8 @@ import { Settings } from "lucide-react";
 function Header({ user, onLogout }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const nameParts = user.username.split(" ");
+  const firstName = nameParts[0];
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -111,6 +113,7 @@ function Header({ user, onLogout }) {
                 sx: {
                   overflow: "visible",
                   filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                  padding: "",
                   mt: 1.5,
                   "& .MuiAvatar-root": {
                     width: 32,
@@ -136,11 +139,9 @@ function Header({ user, onLogout }) {
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
               {" "}
-              <MenuItem>
-                <Typography variant="h6" component="h2">
-                  Welcome {user.username}!
-                </Typography>
-              </MenuItem>
+              <Typography sx={{ p: ".8rem" }} variant="h6" component="h2">
+                Welcome {firstName}!
+              </Typography>
               <MenuItem
                 onClick={handleClose}
                 component={Link}
@@ -149,7 +150,11 @@ function Header({ user, onLogout }) {
                 <Avatar /> Profile
               </MenuItem>
               <Divider />
-              <MenuItem onClick={handleClose} component={Link} to={"/settings"}>
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                to={`/profile/${user.id}`}
+              >
                 <ListItemIcon>
                   <Settings fontSize="small" />
                 </ListItemIcon>

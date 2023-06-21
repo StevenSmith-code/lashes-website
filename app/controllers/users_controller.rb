@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  wrap_parameters format: []
   skip_before_action :authorize, only: :create
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
@@ -18,8 +19,7 @@ class UsersController < ApplicationController
     
     def create
         user = User.create!(user_params)
-        render json: user, status: :created
-        
+        render json: user, status: :created  
     end
     
     def update
@@ -50,7 +50,7 @@ class UsersController < ApplicationController
     end
     
     def user_params
-        params.require(:user).permit(:username, :email, :password, :current_password).except(:id)
+        params.permit(:username, :email, :password, :current_password, :password_confirmation).except(:id)
       end
       
 end

@@ -8,18 +8,12 @@ import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 function Login({ onLogin }) {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(errors);
-  }, []);
-
   const formData = {
-    username,
     email,
     password,
   };
@@ -41,13 +35,11 @@ function Login({ onLogin }) {
         res.json().then((err) => setErrors(err.errors));
       }
     });
-    setUsername("");
-    setPassword("");
   };
 
   return (
-    <div className="my-auto bg-gray-300 max-w-6xl m-auto px-40 py-32 rounded-lg ">
-      <div className="text-center px-6  space-y-7">
+    <div className="mt-20 bg-gray-300 max-w-6xl m-auto px-40 py-32 rounded-lg ">
+      <div className=" text-center px-6  space-y-7">
         <form className="space-y-7" onSubmit={handleSubmit}>
           <div className="">
             <FormControl>
@@ -72,13 +64,15 @@ function Login({ onLogin }) {
             />
           </FormControl>
           {errors?.map((err) => (
-            <p key={err}>{err}</p>
+            <p className="text-red-600" key={err}>
+              {err}
+            </p>
           ))}
           <Button sx={{ mt: 1 /* margin top */ }} type="submit">
             Log in
           </Button>
         </form>
-        <div className="flex justify-between space-x-4">
+        <div className="flex justify-start space-x-4">
           <Typography fontSize="sm">Don't have an account?</Typography>
           <Link href="/signup">Sign up</Link>
         </div>

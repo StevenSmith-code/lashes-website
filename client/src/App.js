@@ -3,6 +3,7 @@ import Home from "./Home";
 import Login from "./Login";
 import Profile from "./Profile";
 import { useEffect, useState } from "react";
+import SignUp from "./SignUp";
 function App() {
   const [user, setUser] = useState(null);
   function handleLogin(user) {
@@ -34,6 +35,7 @@ function App() {
           path="/profile/:id"
           element={<Profile user={user} onUpdate={handleUpdate} />}
         />
+        <Route path="/signup" element={<SignUp onLogin={handleLogin} />} />
       </Routes>
     </div>
   );
