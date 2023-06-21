@@ -10,6 +10,7 @@ import {
   Menu,
   MenuItem,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { Logout } from "@mui/icons-material";
 import { Settings } from "lucide-react";
@@ -135,10 +136,15 @@ function Header({ user, onLogout }) {
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
               {" "}
+              <MenuItem>
+                <Typography variant="h6" component="h2">
+                  Welcome {user.username}!
+                </Typography>
+              </MenuItem>
               <MenuItem
                 onClick={handleClose}
                 component={Link}
-                to={"/profile:id"}
+                to={`/profile/${user.id}`}
               >
                 <Avatar /> Profile
               </MenuItem>
