@@ -12,7 +12,7 @@ function App() {
   function handleUpdate(user) {
     setUser(user);
   }
-  function handleLogout(user) {
+  function handleLogout() {
     setUser(null);
   }
 

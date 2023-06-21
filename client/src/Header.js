@@ -18,8 +18,6 @@ import { Settings } from "lucide-react";
 function Header({ user, onLogout }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const nameParts = user.username.split(" ");
-  const firstName = nameParts[0];
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -140,7 +138,7 @@ function Header({ user, onLogout }) {
             >
               {" "}
               <Typography sx={{ p: ".8rem" }} variant="h6" component="h2">
-                Welcome {firstName}!
+                Welcome {user.username}!
               </Typography>
               <MenuItem
                 onClick={handleClose}
