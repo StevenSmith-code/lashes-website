@@ -3,15 +3,15 @@ import ProfileComponent from "./ProfileComponent";
 import AppointmentComponent from "./AppointmentComponent";
 import DeleteComponent from "./DeleteComponent";
 
-function ProfileContent({ menuItem, user, onUpdate }) {
+function ProfileContent({ menuItem, onUpdate }) {
   if (menuItem === "profile") {
-    return <ProfileComponent user={user} onUpdate={onUpdate} />;
+    return <ProfileComponent onUpdate={onUpdate} />;
   }
   if (menuItem === "appointments") {
-    return <AppointmentComponent user={user} onUpdate={onUpdate} />;
+    return <AppointmentComponent onUpdate={onUpdate} />;
   }
   if (menuItem === "delete") {
-    return <DeleteComponent user={user} onUpdate={onUpdate} />;
+    return <DeleteComponent onUpdate={onUpdate} />;
   }
 }
 

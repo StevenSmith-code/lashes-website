@@ -1,5 +1,7 @@
 class AppointmentsController < ApplicationController
-    before_action :set_appointment, only: [:show, :update, :destroy]
+    before_action :get_appointment, only: [:show, :update, :destroy]
+    rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
+    rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
   
     def index
       appointments = Appointment.all
@@ -12,19 +14,15 @@ class AppointmentsController < ApplicationController
   
     def create
       appointment = Appointment.new(appointment_params)
-      if appointment.save
-        render json: appointment
-      else
-        render json: { error: appointment.errors.full_messages }, status: :unprocessable_entity
-      end
+      appointment.create!(appointment_params)
+      render json: appointment
+     
     end
   
     def update
-      if @appointment.update(appointment_params)
+       @appointment.update(appointment_params)
         render json: @appointment
-      else
-        render json: { error: @appointment.errors.full_messages }, status: :unprocessable_entity
-      end
+    
     end
   
     def destroy
@@ -33,13 +31,18 @@ class AppointmentsController < ApplicationController
     end
   
     private
+
+    def render_unprocessable_entity_response(invalid)
+      render json: { errors: invalid.record.errors }, status: :unprocessable_entity
+    end
   
-    def set_appointment
+    def get_appointment
       @appointment = Appointment.find(params[:id])
     end
   
     def appointment_params
-      params.require(:appointment).permit(:user_id, :service_id, :start_time)
+      params.permit(:user_id, :title, :service_id, :start_time)
     end
+
   end
   

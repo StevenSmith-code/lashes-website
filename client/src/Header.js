@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "./mom.png";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
@@ -14,8 +14,10 @@ import {
 } from "@mui/material";
 import { Logout } from "@mui/icons-material";
 import { Settings } from "lucide-react";
+import UserContext from "./UserProvider";
 
-function Header({ user, onLogout }) {
+function Header({ onLogout }) {
+  const user = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

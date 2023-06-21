@@ -12,4 +12,5 @@ Rails.application.routes.draw do
   get "/user", to: "users#show"
   get "/profile/:id", to: "sessions#show"
   patch "/profile/:id", to: "users#update"
+  delete "/appointment/:id", to: "appointments#destroy"
 end

@@ -4,39 +4,50 @@ import Login from "./Login";
 import Profile from "./Profile";
 import { useEffect, useState } from "react";
 import SignUp from "./SignUp";
+import UserContext from "./UserProvider";
+
 function App() {
   const [user, setUser] = useState(null);
+  useEffect(() => {
+    fetch("/user")
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error("Failed to fetch user data");
+      })
+      .then((user) => setUser(user))
+      .catch((error) => {
+        console.error(error);
+        setUser(null);
+      });
+  }, []);
+
   function handleLogin(user) {
     setUser(user);
   }
+
   function handleUpdate(user) {
     setUser(user);
   }
+
   function handleLogout() {
     setUser(null);
   }
 
-  useEffect(() => {
-    fetch("/user").then((res) => {
-      if (res.ok) {
-        res.json().then((user) => setUser(user));
-      }
-    });
-  }, []);
   return (
     <div className="h-screen">
-      <Routes>
-        <Route
-          path="/"
-          element={<Home user={user} onLogout={handleLogout} />}
-        />
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route
-          path="/profile/:id"
-          element={<Profile user={user} onUpdate={handleUpdate} />}
-        />
-        <Route path="/signup" element={<SignUp onLogin={handleLogin} />} />
-      </Routes>
+      <UserContext.Provider value={user}>
+        <Routes>
+          <Route path="/" element={<Home onLogout={handleLogout} />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route
+            path="/profile/:id"
+            element={<Profile onUpdate={handleUpdate} />}
+          />
+          <Route path="/signup" element={<SignUp onLogin={handleLogin} />} />
+        </Routes>
+      </UserContext.Provider>
     </div>
   );
 }
