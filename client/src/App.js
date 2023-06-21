@@ -5,6 +5,7 @@ import Profile from "./Profile";
 import { useEffect, useState } from "react";
 import SignUp from "./SignUp";
 import UserContext from "./UserProvider";
+import AppointmentForm from "./AppointmentForm";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -46,6 +47,7 @@ function App() {
             element={<Profile onUpdate={handleUpdate} />}
           />
           <Route path="/signup" element={<SignUp onLogin={handleLogin} />} />
+          <Route path="/book" element={<AppointmentForm />} />
         </Routes>
       </UserContext.Provider>
     </div>

@@ -187,7 +187,13 @@ function Header({ onLogout }) {
         <h1 className="font-light text-5xl italic mt-3 mb-14">
           for Your Beautiful Eyes
         </h1>
-        <Button variant="contained" color="secondary" size="large">
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          component={Link}
+          to="/book"
+        >
           BOOK AN APPOINTMENT
         </Button>
       </div>
