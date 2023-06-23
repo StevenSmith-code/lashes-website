@@ -38,7 +38,7 @@ function App() {
 
   return (
     <div className="h-screen">
-      <UserContext.Provider value={user}>
+      <UserContext.Provider value={[user, setUser]}>
         <Routes>
           <Route path="/" element={<Home onLogout={handleLogout} />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />

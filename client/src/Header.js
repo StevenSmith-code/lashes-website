@@ -17,7 +17,7 @@ import { Settings } from "lucide-react";
 import UserContext from "./UserProvider";
 
 function Header({ onLogout }) {
-  const user = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

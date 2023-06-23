@@ -19,7 +19,7 @@ import UserContext from "./UserProvider";
 import { useNavigate } from "react-router-dom";
 
 function AppointmentForm() {
-  const user = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
   const [services, setServices] = useState([]);
   const [dropdownVal, setDropDownVal] = useState("");
   const [errors, setErrors] = useState([]);
@@ -70,7 +70,7 @@ function AppointmentForm() {
       service_id: selectedService.id,
       start_time: formattedDateTime,
     };
-
+    console.log(formData);
     fetch("/appointments", {
       method: "POST",
       body: JSON.stringify(formData),
@@ -127,6 +127,9 @@ function AppointmentForm() {
                 views={["hours"]}
                 ampm
                 renderInput={(params) => <TextField {...params} />}
+                minTime={dayjs().hour(11)}
+                maxTime={dayjs().hour(18)}
+                closeOnSelect={"false"}
               />
             </LocalizationProvider>
           </FormControl>

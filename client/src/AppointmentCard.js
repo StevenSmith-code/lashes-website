@@ -32,7 +32,7 @@ function AppointmentCard({ id, service, created, startTime }) {
   }
 
   function handleCancel() {
-    fetch(`/appointment/${id}`, {
+    fetch(`/appointments/${id}`, {
       method: "DELETE",
     }).then((res) => {
       if (res.ok) {

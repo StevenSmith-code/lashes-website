@@ -3,8 +3,9 @@ import React, { useContext } from "react";
 import AppointmentCard from "./AppointmentCard";
 import UserContext from "./UserProvider";
 
-function AppointmentComponent({ onUpdate }) {
-  const user = useContext(UserContext);
+function AppointmentComponent() {
+  const [user, setUser] = useContext(UserContext);
+
   return (
     <div>
       <Typography variant="h4">Appointments for {user.username}</Typography>

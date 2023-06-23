@@ -29,6 +29,7 @@ class ServicesController < ApplicationController
 
   def destroy
     @service.destroy
+    @service.appointments.destroy_all
     render json: { message: "Service deleted successfully" }
   end
 

@@ -19,7 +19,6 @@ class UsersController < ApplicationController
     
     def create
         user = User.create!(user_params)
-        byebug
         render json: user, status: :created  
     end
     
@@ -38,11 +37,13 @@ class UsersController < ApplicationController
       
       
     
-    def destroy
+      def destroy
         user = User.find(params[:id])
+        user.appointments.destroy_all
         user.destroy
         render json: { message: "User deleted successfully" }, status: :no_content
-    end
+      end
+      
     
     private
 

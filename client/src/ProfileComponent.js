@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import UserContext from "./UserProvider";
 
 function ProfileComponent({ onUpdate }) {
-  const user = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
   const { username, email, id } = user;
   const nameParts = username.split(" ");
   const firstName = nameParts[0];
