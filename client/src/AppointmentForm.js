@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,22 +10,41 @@ import {
 } from "@mui/material";
 import Select from "@mui/material/Select";
 import Typography from "@mui/joy/Typography";
-import Option from "@mui/joy/Option";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { KeyboardArrowDown } from "@mui/icons-material";
+import dayjs from "dayjs";
+import { DesktopDatePicker, DesktopTimePicker } from "@mui/x-date-pickers";
+import UserContext from "./UserProvider";
+import { useNavigate } from "react-router-dom";
 
 function AppointmentForm() {
-  const [selectedDateTime, setSelectedDateTime] = useState(null);
+  const user = useContext(UserContext);
+  const [services, setServices] = useState([]);
   const [dropdownVal, setDropDownVal] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [selectedTime, setSelectedTime] = useState(dayjs());
+  const navigate = useNavigate();
+  useEffect(() => {
+    fetch("/services")
+      .then((res) => res.json())
+      .then((data) => setServices(data));
+  }, []);
+
+  const handleDateChange = (newValue) => {
+    setSelectedDate(newValue);
+  };
+
+  const handleTimeChange = (newValue) => {
+    setSelectedTime(newValue);
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (!selectedDateTime) {
-      setErrors({ dateTime: "Date and Time is required" });
+    if (!selectedDate || !selectedTime) {
+      setErrors({ dateTime: "Date and Time are required" });
       return;
     }
 
@@ -35,28 +53,58 @@ function AppointmentForm() {
       return;
     }
 
-    const formattedDateTime = selectedDateTime.toISOString();
-    const data = {
-      firstName: e.target.firstName.value,
-      lastName: e.target.lastName.value,
-      email: e.target.email.value,
-      dateTime: formattedDateTime,
-      service: dropdownVal,
+    const selectedService = services.find(
+      (service) => service.name === dropdownVal
+    );
+
+    if (!selectedService) {
+      setErrors({ service: "Invalid service selected" });
+      return;
+    }
+
+    const formattedDateTime = dayjs(selectedDate)
+      .set("hour", selectedTime.hour())
+      .toISOString();
+    const formData = {
+      user_id: user.id,
+      service_id: selectedService.id,
+      start_time: formattedDateTime,
     };
 
-    console.log(data); // Do something with the formatted date and time
+    fetch("/appointments", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (res.ok) {
+        res.json().then((data) => {
+          navigate(`/profile/${user.id}`);
+        });
+      } else {
+        res.json().then((err) => {
+          const formattedErrors = Object.entries(err.errors || {}).map(
+            ([field, errorMessages]) => ({
+              field,
+              messages: errorMessages,
+            })
+          );
+          setErrors(formattedErrors);
+        });
+      }
+    });
   };
 
   function servicePrice() {
-    switch (dropdownVal) {
-      case "Volume Lashes":
-        return "200";
-      case "Classic Lashes":
-        return "175";
-      case "Brow Extensions":
-        return "190";
-      default:
-        return "";
+    const selectedService = services.find(
+      (service) => service.name === dropdownVal
+    );
+
+    if (selectedService) {
+      return selectedService.price;
+    } else {
+      return "";
     }
   }
 
@@ -66,47 +114,19 @@ function AppointmentForm() {
         <Typography variant="h5">Schedule Appointment</Typography>
         <form onSubmit={onSubmit}>
           <FormControl fullWidth sx={{ mb: 2 }}>
-            <TextField
-              label="First Name"
-              name="firstName"
-              required
-              error={!!errors.firstName}
-              helperText={errors.firstName}
-            />
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <TextField
-              label="Last Name"
-              name="lastName"
-              required
-              error={!!errors.lastName}
-              helperText={errors.lastName}
-            />
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <TextField
-              label="Email"
-              name="email"
-              required
-              error={!!errors.email}
-              helperText={errors.email}
-            />
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 2 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                renderInput={(props) => (
-                  <TextField
-                    {...props}
-                    label="Date and Time"
-                    error={!!errors.dateTime}
-                    helperText={errors.dateTime}
-                  />
-                )}
-                value={selectedDateTime}
-                onChange={(newValue) => setSelectedDateTime(newValue)}
-                openTo="day"
-                views={["month", "day", "hours", "minutes"]}
+              <DesktopDatePicker
+                value={selectedDate}
+                onChange={handleDateChange}
+                renderInput={(params) => <TextField {...params} />}
+                minDate={dayjs().add(1, "day")}
+              />
+              <DesktopTimePicker
+                value={selectedTime}
+                onChange={handleTimeChange}
+                views={["hours"]}
+                ampm
+                renderInput={(params) => <TextField {...params} />}
               />
             </LocalizationProvider>
           </FormControl>
@@ -119,9 +139,11 @@ function AppointmentForm() {
               error={!!errors.service}
             >
               <MenuItem value="">Select a service</MenuItem>
-              <MenuItem value="Volume Lashes">Volume Lashes</MenuItem>
-              <MenuItem value="Classic Lashes">Classic Lashes</MenuItem>
-              <MenuItem value="Brow Extensions">Brow Extensions</MenuItem>
+              {services.map((service) => (
+                <MenuItem key={service.id} value={service.name}>
+                  {service.name}
+                </MenuItem>
+              ))}
             </Select>
             {errors.service && (
               <FormHelperText error>{errors.service}</FormHelperText>
@@ -145,6 +167,18 @@ function AppointmentForm() {
           >
             {servicePrice()}
           </Typography>
+
+          {Array.isArray(errors) &&
+            errors.map((error) => (
+              <div className="text-red-600" key={error.field}>
+                <p>{error.field}</p>
+                <ul>
+                  {error.messages.map((message, index) => (
+                    <li key={index}>{message}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
 
           <Button variant="contained" type="submit">
             Schedule Appointment

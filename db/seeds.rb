@@ -6,8 +6,12 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 # Create users
-user1 = User.create(username: "John Doe", email: "john@example.com", password: "password")
-user2 = User.create(username: "Jane Smith", email: "jane@example.com", password: "password")
+user1 = User.create(username: "John Doe",
+email: "johni@example.com",
+password: "password",
+password_confirmation: "password")
+user2 = User.create(username: "Jane Smith", email: "jane1@example.com", password: "password",
+    password_confirmation: "password")
 
 # # Create services
 service1 = Service.create(name: "Classic Eyelash Extensions", description: "Adds length and volume to natural lashes", price: 175.00)
