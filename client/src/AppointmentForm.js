@@ -105,7 +105,10 @@ function AppointmentForm() {
             id: data.id,
             created_at: data.created_at,
             start_time: data.start_time,
-            serviceName: data.service.name,
+            service: {
+              title: data.service.name,
+              price: data.service.price,
+            },
           };
 
           setUser((prevUser) => ({

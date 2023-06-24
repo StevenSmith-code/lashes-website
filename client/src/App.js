@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import SignUp from "./SignUp";
 import UserContext from "./UserProvider";
 import AppointmentForm from "./AppointmentForm";
+import AppointmentDetails from "./AppointmentDetails";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -48,6 +49,7 @@ function App() {
           />
           <Route path="/signup" element={<SignUp onLogin={handleLogin} />} />
           <Route path="/book" element={<AppointmentForm />} />
+          <Route path="/appointments/:id" element={<AppointmentDetails />} />
         </Routes>
       </UserContext.Provider>
     </div>

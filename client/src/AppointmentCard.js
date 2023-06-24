@@ -29,7 +29,8 @@ function AppointmentCard({ id, service, created, startTime }) {
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
 
-  function handleDialog() {
+  function handleDialog(e) {
+    e.stopPropagation();
     setOpenDialog(true);
   }
 
@@ -72,7 +73,7 @@ function AppointmentCard({ id, service, created, startTime }) {
             <strong>Appointment booked on:</strong> {formattedCreated}
           </Typography>
           <div className="text-right cursor-pointer">
-            <DeleteOutlineIcon onClick={handleDialog} />
+            <DeleteOutlineIcon onClick={(e) => handleDialog(e)} />
           </div>
         </CardContent>
       </Card>
