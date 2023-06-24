@@ -10,12 +10,12 @@ function AppointmentComponent() {
     <div>
       <Typography variant="h4">Appointments for {user.username}</Typography>
 
-      <div className="flex mt-10">
+      <div className="grid grid-cols-3 mt-10">
         {user.appointments?.map((appointment) => (
           <AppointmentCard
             key={appointment.id}
             id={appointment.id}
-            service={appointment.service.title}
+            service={appointment.service?.title}
             created={appointment.created_at}
             startTime={appointment.start_time}
           />

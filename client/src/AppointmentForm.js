@@ -25,7 +25,15 @@ function AppointmentForm() {
   const [errors, setErrors] = useState([]);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [selectedTime, setSelectedTime] = useState(dayjs());
+  const [timeError, setTimeError] = useState(false);
+  const [dateError, setDateError] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
   useEffect(() => {
     fetch("/services")
       .then((res) => res.json())
@@ -34,10 +42,23 @@ function AppointmentForm() {
 
   const handleDateChange = (newValue) => {
     setSelectedDate(newValue);
+    if (newValue.isBefore(dayjs().add(1, "day"))) {
+      setDateError(true);
+    } else {
+      setDateError(false);
+    }
   };
 
   const handleTimeChange = (newValue) => {
     setSelectedTime(newValue);
+    if (
+      newValue.isBefore(dayjs().hour(11)) ||
+      newValue.isAfter(dayjs().hour(18))
+    ) {
+      setTimeError(true);
+    } else {
+      setTimeError(false);
+    }
   };
 
   const onSubmit = (e) => {
@@ -70,7 +91,6 @@ function AppointmentForm() {
       service_id: selectedService.id,
       start_time: formattedDateTime,
     };
-    console.log(formData);
     fetch("/appointments", {
       method: "POST",
       body: JSON.stringify(formData),
@@ -80,6 +100,19 @@ function AppointmentForm() {
     }).then((res) => {
       if (res.ok) {
         res.json().then((data) => {
+          console.log(data);
+          const updatedAppointments = {
+            id: data.id,
+            created_at: data.created_at,
+            start_time: data.start_time,
+            serviceName: data.service.name,
+          };
+
+          setUser((prevUser) => ({
+            ...prevUser,
+            appointments: [...prevUser.appointments, updatedAppointments],
+          }));
+
           navigate(`/profile/${user.id}`);
         });
       } else {
@@ -95,7 +128,6 @@ function AppointmentForm() {
       }
     });
   };
-
   function servicePrice() {
     const selectedService = services.find(
       (service) => service.name === dropdownVal
@@ -118,7 +150,13 @@ function AppointmentForm() {
               <DesktopDatePicker
                 value={selectedDate}
                 onChange={handleDateChange}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    error={dateError}
+                    helperText={dateError ? "Invalid date" : ""}
+                  />
+                )}
                 minDate={dayjs().add(1, "day")}
               />
               <DesktopTimePicker
@@ -129,7 +167,9 @@ function AppointmentForm() {
                 renderInput={(params) => <TextField {...params} />}
                 minTime={dayjs().hour(11)}
                 maxTime={dayjs().hour(18)}
-                closeOnSelect={"false"}
+                error={timeError}
+                helperText={timeError ? "Invalid time" : ""}
+                closeOnSelect={false}
               />
             </LocalizationProvider>
           </FormControl>

@@ -9,10 +9,12 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useNavigate } from "react-router-dom";
+import UserContext from "./UserProvider";
 function AppointmentCard({ id, service, created, startTime }) {
+  const [user, setUser] = useContext(UserContext);
   function formatDateTime(dateTimeString) {
     const dateTime = new Date(dateTimeString);
     const formattedDate = dateTime.toLocaleDateString(); // Format the date portion
@@ -36,6 +38,12 @@ function AppointmentCard({ id, service, created, startTime }) {
       method: "DELETE",
     }).then((res) => {
       if (res.ok) {
+        setUser((prevUser) => ({
+          ...prevUser,
+          appointments: prevUser.appointments.filter(
+            (appointment) => appointment.id !== id
+          ),
+        }));
         navigate("/");
       }
     });
