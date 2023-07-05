@@ -68,13 +68,15 @@ function Login({ onLogin }) {
               {err}
             </p>
           ))}
-          <Button sx={{ mt: 1 /* margin top */ }} type="submit">
+          <Button sx={{ mt: 1, bgcolor: "purple" }} type="submit">
             Log in
           </Button>
         </form>
         <div className="flex justify-start space-x-4">
           <Typography fontSize="sm">Don't have an account?</Typography>
-          <Link href="/signup">Sign up</Link>
+          <Link href="/signup" sx={{ color: "purple" }}>
+            Sign up
+          </Link>
         </div>
       </div>
     </div>
