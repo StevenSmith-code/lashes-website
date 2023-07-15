@@ -32,7 +32,7 @@ function ProfileComponent({ onUpdate }) {
       password: newPass,
     };
     console.log(formData);
-    fetch(`/profile/${id}`, {
+    fetch(`/users/${id}`, {
       method: "PATCH",
       body: JSON.stringify(formData),
       headers: {

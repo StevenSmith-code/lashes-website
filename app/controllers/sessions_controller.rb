@@ -9,17 +9,6 @@ class SessionsController < ApplicationController
           render json: { errors: ["Invalid username or password"] }, status: :unauthorized
       end
   end  
-
-  def show
-      user = User.find_by(id: sessions[:user_id])
-
-      if user
-          render json: user, status: :ok
-      else
-          render json:{error: ["User not found"]}, status: :not_found
-      end
-  end
-
   def destroy
       session.delete :user_id
       head :no_content

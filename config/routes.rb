@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :services
+  resources :services do
+    get 'users_with_appointments', on: :member
+  end
   resources :appointments
   resources :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -10,6 +12,5 @@ Rails.application.routes.draw do
   delete "/logout", to: "sessions#destroy"
   post "/signup", to: "users#create"
   get "/user", to: "users#show"
-  get "/profile/:id", to: "sessions#show"
-  patch "/profile/:id", to: "users#update"
+
 end

@@ -6,13 +6,14 @@ import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Menu, MenuItem } from "@mui/material";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserContext from "./UserProvider";
 
 export default function NavBar() {
   const [user, setUser] = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -24,7 +25,10 @@ export default function NavBar() {
       method: "DELETE",
     })
       .then((res) => console.log(res))
-      .then(() => setUser(null));
+      .then(() => {
+        setUser(null);
+        navigate("/login");
+      });
   };
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -55,7 +59,7 @@ export default function NavBar() {
             <MenuItem component={Link} to="/" onClick={handleClose}>
               Home
             </MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
           <Typography
             variant="h6"

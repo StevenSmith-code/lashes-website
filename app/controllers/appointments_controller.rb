@@ -13,13 +13,8 @@ class AppointmentsController < ApplicationController
   end
 
   def create
-    appointment = Appointment.new(appointment_params)
-    
-    if appointment.save
-      render json: appointment, status: :created
-    else
-      render json: { errors: appointment.errors }, status: :unprocessable_entity
-    end
+   appointment = Appointment.create!(appointment_params)
+   render json: appointment, status: :created  
   end
   
 

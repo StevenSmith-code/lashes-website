@@ -33,6 +33,13 @@ class ServicesController < ApplicationController
     render json: { message: "Service deleted successfully" }
   end
 
+  def users_with_appointments
+    service = Service.find(params[:id])
+    users = service.users
+
+    render json: users, each_serializer: UserServiceSerializer
+  end
+
   private
 
   def set_service

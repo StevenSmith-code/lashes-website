@@ -74,6 +74,20 @@ function Profile({ onUpdate }) {
                   <ListItemText primary="Delete Account" />
                 </ListItemButton>
               </ListItem>
+              {user.admin && (
+                <ListItem>
+                  <ListItemButton
+                    onClick={() => handleItemClick("dashboard")}
+                    className={`rounded-lg px-4 py-2 ${
+                      selectedMenuItem === "delete"
+                        ? "bg-primary text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    <ListItemText primary="Dashboard" />
+                  </ListItemButton>
+                </ListItem>
+              )}
             </List>
           </Box>
         </div>
