@@ -33,7 +33,6 @@ function AppointmentForm() {
       navigate("/login");
     }
   }, [user, navigate]);
-
   useEffect(() => {
     fetch("/services")
       .then((res) => res.json())
