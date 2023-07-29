@@ -1,5 +1,9 @@
 class ServicesController < ApplicationController
   before_action :set_service, only: [:show, :update, :destroy]
+  wrap_parameters format: []
+  skip_before_action :authorize, only: :create
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
+  rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
 
   def index
     services = Service.all
@@ -11,12 +15,9 @@ class ServicesController < ApplicationController
   end
 
   def create
-    service = Service.new(service_params)
-    if service.save
-      render json: service
-    else
-      render json: { error: service.errors.full_messages }, status: :unprocessable_entity
-    end
+    service = Service.create!(service_params)
+    render json: service, status: :created
+    
   end
 
   def update
@@ -47,6 +48,6 @@ class ServicesController < ApplicationController
   end
 
   def service_params
-    params.require(:service).permit(:name, :price)
+    params.permit(:name, :description, :price)
   end
 end

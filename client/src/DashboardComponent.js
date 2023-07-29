@@ -5,6 +5,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Tab, Tabs } from "@mui/material";
+import ServiceForm from "./ServiceForm";
 
 function DashboardComponent() {
   const [data, setData] = useState([]);
@@ -43,32 +44,37 @@ function DashboardComponent() {
         <Tab label="Classic Lashes" value={13} />
         <Tab label="Volume Lashes" value={14} />
         <Tab label="Brow Extensions" value={15} />
+        <Tab label="Add Service" value={0} />
       </Tabs>
-      <table className="w-full">
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <th key={header.id}>
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext()
-                )}
-              </th>
-            ))}
-          </tr>
-        ))}
-        <tbody className="text-center">
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+      {serviceId === 0 ? (
+        <ServiceForm />
+      ) : (
+        <table className="w-full">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th key={header.id}>
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </th>
               ))}
             </tr>
           ))}
-        </tbody>
-      </table>
+          <tbody className="text-center">
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
